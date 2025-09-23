@@ -72,7 +72,6 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(ap);
 
-        // NOTA: no hay addFilterBefore(jwtFilter, ...) para que compile sin tu clase
         return http.build();
     }
 }

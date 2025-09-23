@@ -25,7 +25,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = req.getRequestURI();
-        // ⬅️ BYPASS: no tocar nada si es endpoint público de auth
+
         if (path.startsWith("/api/auth/")) {
             chain.doFilter(req, res);
             return;

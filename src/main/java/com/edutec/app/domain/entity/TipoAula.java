@@ -11,5 +11,5 @@ public class TipoAula {
     private Integer idTipoAula;
 
     @Column(nullable = false, unique = true)
-    private String nombre; // en tu BD no hay descripcion
+    private String nombre;
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/admin/tipos-recurso") // <— CAMBIADO PARA EVITAR CHOQUE
+@RequestMapping("/api/admin/tipos-recurso")
 @RequiredArgsConstructor
 public class TipoRecursoController {
 

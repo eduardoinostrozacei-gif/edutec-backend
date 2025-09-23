@@ -23,7 +23,7 @@ public class LogNotificationService implements NotificationService {
         n.setCorreo(correo);
         n.setAsunto(asunto);
         n.setCuerpo(cuerpo);
-        n.setEnviada(true); // marcamos como "enviada/registrada"
+        n.setEnviada(true);
         repo.save(n);
         log.info("[NOTIF:{}] to={} | {} - {}", tipo, correo, asunto, cuerpo);
     }

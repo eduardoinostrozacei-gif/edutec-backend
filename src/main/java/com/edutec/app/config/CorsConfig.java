@@ -9,7 +9,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                // 👇 CAMBIA estas URLs a las de tu frontend
+
                 .allowedOrigins(
                         "http://localhost:5173",
                         "http://localhost:3000",
