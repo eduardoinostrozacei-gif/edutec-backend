@@ -1,21 +1,25 @@
-# Imagen base de Java 21
-FROM eclipse-temurin:21-jdk
-
-# Directorio de trabajo dentro del contenedor
+# ---------- STAGE 1: BUILD ----------
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copia pom.xml y descarga dependencias
+# Copiamos el POM y resolvemos dependencias (cachea)
 COPY pom.xml .
-COPY mvnw .
-COPY .mvn .mvn
+RUN mvn -B -q dependency:go-offline
 
-RUN ./mvnw dependency:go-offline
-
-# Copia el resto del código
+# Copiamos el código y compilamos
 COPY src src
+RUN mvn -B -q clean package -DskipTests
 
-# Construye el jar (sin tests)
-RUN ./mvnw clean package -DskipTests
+# ---------- STAGE 2: RUNTIME ----------
+FROM eclipse-temurin:21-jre
+WORKDIR /app
 
-# Arranca la app
-CMD ["java", "-jar", "target/edutec-backend-0.0.1-SNAPSHOT.jar"]
+# Copiamos el JAR construido
+COPY --from=build /app/target/edutec-backend-0.0.1-SNAPSHOT.jar app.jar
+
+# Puerto (informativo)
+EXPOSE 8080
+
+# Render inyecta $PORT; usamos ese puerto
+ENV JAVA_OPTS=""
+CMD ["bash", "-lc", "java $JAVA_OPTS -Dserver.port=${PORT:-8080} -jar app.jar"]
