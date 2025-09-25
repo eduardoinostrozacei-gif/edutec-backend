@@ -47,10 +47,9 @@ public class SecurityConfig {
     };
 
     @Bean
-    SecurityFilterChain filter(HttpSecurity http,
-                               AuthenticationProvider ap) throws Exception {
+    SecurityFilterChain filter(HttpSecurity http, AuthenticationProvider ap) throws Exception {
         http
-                .cors(c -> {}) // si tienes CorsConfig, se aplica aquí
+                .cors(c -> {}) // usa el CorsConfigurationSource del bean
                 .csrf(cs -> cs.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(unauthorized))
@@ -58,16 +57,17 @@ public class SecurityConfig {
                         // preflight CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // público: salud/diagnóstico (útil en deploy)
+                        // público: salud/diagnóstico
                         .requestMatchers("/actuator/**").permitAll()
 
-                        // público: login/registro
+                        // público: login/registro (ambas rutas por si cambiaste el prefijo)
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // público: endpoints abiertos (p.ej., /api/public/ping)
+                        // público opcional
                         .requestMatchers("/api/public/**").permitAll()
 
-                        // todo lo demás, protegido
+                        // resto, protegido
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(ap);
